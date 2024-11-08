@@ -1,0 +1,81 @@
+{% extends 'nav.html' %}
+{% block maincontent %}
+<body>
+    <div class="container">
+        <h1 class="text-center">Weekly Timetable for Year {{ year }}, Semester {{ semester }}</h1>
+        <p class="text-center text-success"><b>Showing timetable from {{ today }} to {{ seven_days_later }}:</b></p>
+
+        <form method="POST" action="." class="text-center">
+            {% csrf_token %}
+            <label for="year" class="form-label"><b>Year of Study:{{year}}</b></label>
+            <select name="year" id="year" class="form-select w-auto mx-2">
+                <option value=""><b>Select Year</b></option>
+                <option value="1" {% if year == '1' %}selected{% endif %}>1st Year</option>
+                <option value="2" {% if year == '2' %}selected{% endif %}>2nd Year</option>
+                <option value="3" {% if year == '3' %}selected{% endif %}>3rd Year</option>
+                <option value="4" {% if year == '4' %}selected{% endif %}>4th Year</option>
+            </select>
+
+            <label for="semester" class="form-label"><b>Semester:{{semester}}</b></label>
+            <select name="semester" id="semester" class="form-select w-auto mx-2">
+                <option value=""><b>Select Semester</b></option>
+                <option value="1" {% if semester == '1' %}selected{% endif %}>Semester 1</option>
+                <option value="2" {% if semester == '2' %}selected{% endif %}>Semester 2</option>
+                <option value="3" {% if semester == '3' %}selected{% endif %}>Semester 3</option>
+                <option value="4" {% if semester == '4' %}selected{% endif %}>Semester 4</option>
+                <option value="5" {% if semester == '5' %}selected{% endif %}>Semester 5</option>
+                <option value="6" {% if semester == '6' %}selected{% endif %}>Semester 6</option>
+                <option value="7" {% if semester == '7' %}selected{% endif %}>Semester 7</option>
+                <option value="8" {% if semester == '8' %}selected{% endif %}>Semester 8</option>
+            </select>
+
+            <label for="Section" class="form-label"><b>Section:{{Section}}</b></label>
+            <select name="Section" id="Section" class="form-select w-auto mx-2">
+                <option value=""><b>All Section</b></option>
+                <option value="A" {% if Section == 'A' %}selected{% endif %}>A</option>
+                <option value="B" {% if Section == 'B' %}selected{% endif %}>B</option>
+                <option value="C" {% if Section == 'C' %}selected{% endif %}>C</option>
+                <option value="D" {% if Section == 'D' %}selected{% endif %}>D</option>
+                <option value="E" {% if Section == 'E' %}selected{% endif %}>E</option>
+                <option value="F" {% if Section == 'F' %}selected{% endif %}>F</option>
+                <option value="G" {% if Section == 'G' %}selected{% endif %}>G</option>
+                <option value="H" {% if Section == 'H' %}selected{% endif %}>H</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        {% if timetable %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="bg-danger text-white">Day</th>
+                    <th class="bg-info text-white"> Time</th>   
+                    <th class="bg-primary text-white">Course</th>
+                    <th class="bg-success text-white">Teacher</th>
+                    <th class="bg-warning text-dark">Venue</th>
+                    <th class="bg-secondary text-white">Session Type</th>
+                    <th class="bg-info text-white">Section</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in timetable %}
+                    <tr>
+                        <tr>
+                            <td class="bg-warning text-dark"><b>{{ session.Day }}</b></td>
+                        <td><strong>{{ session.Timestart }} - {{ session.TimeEnd }}</strong></td>
+                        <td>{{ session.Course.CourseName }}</td>
+                        <td>{{ session.Teacher.FirstName }} {{ session.Teacher.LastName }}</td>
+                        <td>{{ session.Venue.VenueName }}</td>
+                        <td>{{ session.SessionType }}</td>
+                        <td>{{ session.Section }}</td>
+                        </tr>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center no-data">No timetable found for the specified year and semester.</p>
+    {% endif %}
+    </div>
+</body>
+{% endblock maincontent %}
